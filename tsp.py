@@ -1,5 +1,5 @@
 from node import Node
-from graph import Graph
+from graph import Dummy, BFS
 
 
 def parse_map():
@@ -14,8 +14,8 @@ def parse_map():
 
 def main():
     cities = parse_map()
-    graph = Graph(cities, {'algo': 'dummy'})
-    graph.find_shortest_path()
+    graph = Dummy(cities)
+    graph.print_result()
 
 
 if __name__ == "__main__":

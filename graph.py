@@ -1,18 +1,19 @@
 from node import Node
+from abc import ABC, abstractmethod
 
 
-class Graph:
-    def __init__(self, city_list, options):
-        self.__algo = options['algo']
-        self.__nodes = [Node(city) for city in city_list]
+class Graph(ABC):
+    def __init__(self, city_list):
+        self.nodes = [Node(city) for city in city_list]
 
-    def get_result(self, algo):
-        return getattr(self, algo)(self.__nodes)
-
-    def find_shortest_path(self):
-        result = self.get_result(self.__algo)
-        print(result[1])
+    @abstractmethod
+    def find_shortest_path(self, nodes):
+        pass
+    
+    def print_result(self):
+        result = self.find_shortest_path(self.nodes)
         total_distance = self.total_distance(result[0])
+        print(result[1])
         print('Total distance: ' + str(total_distance))
 
     def distance(self, node1, node2):
@@ -26,7 +27,12 @@ class Graph:
             total_distance += self.distance(node, path[index + 1])
         return total_distance
 
-    def dummy(self, nodes):
+
+class Dummy(Graph):
+    def __init__(self, city_list):
+        super().__init__(city_list)
+    
+    def find_shortest_path(self, nodes):
         start = nodes[0]
         path = [start]
         display_path = []
@@ -37,4 +43,22 @@ class Graph:
             nodes.remove(next_node)
         for node in path:
             display_path.append(node.name)
-        return path, display_path
+        return (path, display_path)
+
+
+class BFS(Graph):
+    def __init__(self, city_list):
+        super().__init__(city_list)
+    
+    def find_shortest_path(self, nodes):
+        start = nodes[0]
+        path = [start]
+        display_path = []
+        nodes.remove(start)
+        while nodes:
+            next_node = min(nodes, key=lambda node: self.distance(path[-1], node))
+            path.append(next_node)
+            nodes.remove(next_node)
+        for node in path:
+            display_path.append(node.name)
+        return (path, display_path)
