@@ -62,3 +62,21 @@ class BFS(Graph):
         for node in path:
             display_path.append(node.name)
         return (path, display_path)
+
+
+class DFS(Graph):
+    def __init__(self, city_list):
+        super().__init__(city_list)
+    
+    def find_shortest_path(self, nodes):
+        start = nodes[0]
+        path = [start]
+        display_path = []
+        nodes.remove(start)
+        while nodes:
+            next_node = min(nodes, key=lambda node: self.distance(path[-1], node))
+            path.append(next_node)
+            nodes.remove(next_node)
+        for node in path:
+            display_path.append(node.name)
+        return (path, display_path)
