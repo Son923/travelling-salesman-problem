@@ -4,5 +4,5 @@ class Node:
         self.name = city_info[0]
         self.node_position = (city_info[1], city_info[2])
 
-    def get_position(self):
+    def get_pos(self):
         return self.node_position
