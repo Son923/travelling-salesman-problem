@@ -1,5 +1,5 @@
 from node import Node
-from graph import Greedy, Dynamic, abdc
+from graph import Greedy, Dynamic
 from sys import argv, stderr
 
 
@@ -20,17 +20,17 @@ def parse_map():
 
 def main():
     cities = parse_map()
-    nodes = [Node(city) for city in cities]    
+    nodes = [Node(city) for city in cities]
 
     # Greedy
     print('GREEDY')
-    graph = Greedy()
-    graph.set_nodes(nodes)
+    graph = Greedy(nodes)
+    # graph.set_nodes(nodes)
     graph.print_result()
 
-    graph1 = Dynamic()
-    graph1.set_nodes(nodes)
-    graph1.min_distance(nodes[0])
+    # graph1 = Dynamic()
+    # graph1.set_nodes(nodes)
+    # graph1.min_distance(nodes[0])
  
 
 if __name__ == "__main__":

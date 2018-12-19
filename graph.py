@@ -1,17 +1,18 @@
-from node import Node
 from abc import ABC, abstractmethod
+
+from node import Node
 
 
 class Graph(ABC):
-    def __init__(self):
-        self.nodes = []
+    def __init__(self,nodes):
+        self.nodes = nodes
 
     @abstractmethod
     def find_shortest_path(self):
         pass
     
-    def set_nodes(self, nodes):
-        self.nodes = nodes
+    # def set_nodes(self, nodes):
+    #     self.nodes = nodes
 
     def print_result(self):
         result = self.find_shortest_path()
@@ -20,8 +21,8 @@ class Graph(ABC):
         print('Total distance: ' + str(total_distance))
 
     def distance(self, node1, node2):
-        pos1 = node1.get_pos()
-        pos2 = node2.get_pos()
+        pos1 = node1.node_position
+        pos2 = node2.node_position
         return ((pos1[0] - pos2[0])**2 + (pos1[1] - pos2[1])**2) ** 0.5
 
     def total_distance(self, path):
@@ -32,8 +33,8 @@ class Graph(ABC):
 
 # DONE
 class Greedy(Graph):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,nodes):
+        super().__init__(nodes)
     
     def find_shortest_path(self):
         start = self.nodes[0]
@@ -86,6 +87,3 @@ class Dynamic(Graph):
         nodes = self.nodes.remove(node)
         print(nodes)
         print(self.nodes)
-        
-
-
