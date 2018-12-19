@@ -1,5 +1,5 @@
 from node import Node
-from graph import Greedy, Dynamic
+from graph import Greedy, Dynamic, TwoOpt
 from sys import argv, stderr
 
 
@@ -11,27 +11,34 @@ def parse_map():
         for i in content:
             i = i.split(',')
             cities.append((i[0], float(i[1]), float(i[2])))
-        return cities
+        option = argv[2]
+        return cities, option
     except IndexError:
-        print('No file')
         stderr.write('Invalid file')
         exit()
 
 
 def main():
-    cities = parse_map()
-    nodes = [Node(city) for city in cities]    
+    cities, option = parse_map()
+    nodes = [Node(city) for city in cities]
 
-    # Greedy
-    print('GREEDY')
-    graph = Greedy()
-    graph.set_nodes(nodes)
-    graph.print_result()
-
-    graph1 = Dynamic()
-    graph1.set_nodes(nodes)
-    graph1.min_distance(nodes[0])
- 
+    if option == 'greedy':    
+        # Greedy
+        print('GREEDY')
+        graph = Greedy()
+        graph.set_nodes(nodes)
+        graph.print_result()
+    elif option == 'dynamic':
+        # Dynamic
+        print('DYNAMIC')
+        graph1 = Dynamic()
+        graph1.set_nodes(nodes)
+        graph1.min_distance(nodes[0])
+    elif option == '2opt':
+        print('2-Opt')
+        graph2 = TwoOpt()
+        graph2.set_nodes(nodes)
+        graph2.print_result()
 
 if __name__ == "__main__":
     main()
