@@ -29,11 +29,9 @@ def main():
     graph.print_result()
 
     graph1 = Dynamic()
-    graph1.set_nodes(nodes)fd
+    graph1.set_nodes(nodes)
     graph1.min_distance(nodes[0])
  
 
 if __name__ == "__main__":
     main()
-
-addsomthingfddsa
