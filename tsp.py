@@ -1,6 +1,7 @@
-from node import Node
-from graph import Greedy, Dynamic, TwoOpt
 from sys import argv, stderr
+
+from graph import BruteForce, Greedy, TwoOpt
+from node import Node
 
 
 def parse_map():
@@ -21,24 +22,18 @@ def parse_map():
 def main():
     cities, option = parse_map()
     nodes = [Node(city) for city in cities]
-
-    if option == 'greedy':    
-        # Greedy
+    if option == 'brute':
+        print('BRUTE-FORCE')
+        graph = BruteForce()
+    elif option == 'greedy':    
         print('GREEDY')
         graph = Greedy()
-        graph.set_nodes(nodes)
-        graph.print_result()
-    elif option == 'dynamic':
-        # Dynamic
-        print('DYNAMIC')
-        graph1 = Dynamic()
-        graph1.set_nodes(nodes)
-        graph1.min_distance(nodes[0])
     elif option == '2opt':
         print('2-Opt')
-        graph2 = TwoOpt()
-        graph2.set_nodes(nodes)
-        graph2.print_result()
+        graph = TwoOpt()
+
+    graph.set_nodes(nodes)
+    graph.print_result()
 
 if __name__ == "__main__":
     main()

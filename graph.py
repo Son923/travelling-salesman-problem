@@ -1,5 +1,7 @@
-from node import Node
 from abc import ABC, abstractmethod
+from itertools import permutations
+
+from node import Node
 
 
 class Graph(ABC):
@@ -17,9 +19,14 @@ class Graph(ABC):
         return self.__nodes
 
     def print_result(self):
-        result = self.find_shortest_path()
-        total_distance = self.total_distance(result[0])
-        print(result[1])
+        display_path = []
+        final_path = self.find_shortest_path()
+        total_distance = self.total_distance(final_path)
+        
+        for node in final_path:
+            display_path.append(node.get_name())
+
+        print(display_path)
         print('Total distance: ' + str(total_distance))
 
     def distance(self, node1, node2):
@@ -33,6 +40,25 @@ class Graph(ABC):
             total_distance += self.distance(node, path[index + 1])
         return total_distance
 
+# DONE
+class BruteForce(Graph):
+    def __init__(self):
+        super().__init__()
+    
+    def find_shortest_path(self):
+        all_paths = self.permutation()
+        path = min(all_paths, key=lambda path: self.total_distance(path))
+        return path
+
+    def permutation(self):
+        nodes = self.get_nodes()
+        paths = list(permutations(self.get_nodes()[1:]))
+        all_paths = []
+        for path in paths:
+            copy_path = list(path)
+            copy_path.insert(0, nodes[0])
+            all_paths.append(tuple(copy_path))   
+        return all_paths
 
 # DONE
 class Greedy(Graph):
@@ -43,29 +69,20 @@ class Greedy(Graph):
         nodes = self.get_nodes()
         start = nodes[0]
         path = [start]
-        display_path = []
         nodes.remove(start)
         while nodes:
             next_node = min(nodes, key=lambda node: self.distance(path[-1], node))
             path.append(next_node)
             nodes.remove(next_node)
-        for node in path:
-            display_path.append(node.get_name())
-        return (path, display_path)
+        return path
 
 
-class Dynamic(Graph):
+class NearestNeighbor(Graph):
     def __init__(self):
         super().__init__()
     
     def find_shortest_path(self):
-        start = self.nodes
-        path = [start]
-        display_path = []
-        self.nodes.remove(start)
-    
-    def min_distance(self, node):
-        pass        
+        pass
 
 
 class TwoOpt(Graph):
@@ -84,15 +101,23 @@ class TwoOpt(Graph):
             path.append(next_node)
             nodes.remove(next_node)
         # 2opt
+        count = 0
         loop = True
-        while True:
-            for i in range(len(path)):
-                for k in range(1,len(path) + 1):
+        while loop:
+            total_distance = self.total_distance(path)
+            for i in range(len(path) - 1):
+                for k in range(i + 1, len(path)):
                     new_path = self.swap_2opt(path, i, k)
                     new_total_distance = self.total_distance(new_path)
                     if new_total_distance < total_distance:
                         path = new_path
-                        loop = False
+                    else:
+                        count += 1
+            
+                        
+
+
+
         # return
         for node in path:
             display_path.append(node.get_name())

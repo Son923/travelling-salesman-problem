@@ -1,22 +1,13 @@
+from itertools import permutations
 
-lst = ['a', 'b', 'c', 'd', 'e', 'f']
 
-def swap_2opt(path, i, k):       
-        new_path = []
-        new_path.extend(path[0:i-1])
-        new_path.extend(path[i:k].reverse())
-        new_path.extend(path[k + 1:])
-        return new_path
+nodes = ['a', 'b', 'c', 'd', 'e']
+paths = list(permutations(nodes[1:]))
+all_paths = []
+for path in paths:
+    copy_path = list(path)
+    copy_path.insert(0, nodes[0])
+    all_paths.append(tuple(copy_path))
+print(all_paths)
 
-def total_distance(self, path):
-        total_distance = 0
-        for index, node in enumerate(path[:-1]):
-            total_distance += self.distance(node, path[index + 1])
-        return total_distance
-
-for i in range(len(lst)):
-    for k in range(len(lst)):
-        new_path = swap_2opt(path, i, k)
-        new_total_distance = total_distance(new_path)
-        if new_total_distance < total_distance:
-            path = new_path
+# all_paths = list(permutations(self.get_nodes()[1:])).insert(0, self.get_nodes()[0])
