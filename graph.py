@@ -18,11 +18,11 @@ class Graph(ABC):
     def get_nodes(self):
         return self.__nodes
 
-    def print_result(self):
-        display_path = []
-        final_path = self.find_shortest_path()
+    def print_result(self, path):
+        final_path = path
         total_distance = self.total_distance(final_path)
         
+        display_path = []
         for node in final_path:
             display_path.append(node.get_name())
 
@@ -77,14 +77,6 @@ class Greedy(Graph):
         return path
 
 
-class NearestNeighbor(Graph):
-    def __init__(self):
-        super().__init__()
-    
-    def find_shortest_path(self):
-        pass
-
-
 class TwoOpt(Graph):
     def __init__(self):
         super().__init__()
@@ -92,40 +84,38 @@ class TwoOpt(Graph):
     def find_shortest_path(self):
         nodes = self.get_nodes()
         start = nodes[0]
-        path = [start]
+        init_path = [start]
         display_path = []
         nodes.remove(start)
-        # This is from greedy
+        # greedy path as init_path
         while nodes:
-            next_node = min(nodes, key=lambda node: self.distance(path[-1], node))
-            path.append(next_node)
+            next_node = min(nodes, key=lambda node: self.distance(init_path[-1], node))
+            init_path.append(next_node)
             nodes.remove(next_node)
+        
         # 2opt
-        count = 0
         loop = True
         while loop:
-            total_distance = self.total_distance(path)
-            for i in range(len(path) - 1):
-                for k in range(i + 1, len(path)):
-                    new_path = self.swap_2opt(path, i, k)
+            best_path = init_path
+            total_distance = self.total_distance(best_path)
+            for i in range(len(best_path) - 1):
+                for k in range(i + 1, len(best_path)):
+                    new_path = self.swap_2opt(best_path, i, k)
                     new_total_distance = self.total_distance(new_path)
                     if new_total_distance < total_distance:
-                        path = new_path
-                    else:
-                        count += 1
-            
-                        
-
-
-
-        # return
-        for node in path:
-            display_path.append(node.get_name())
-        return (path, display_path)
+                        best_path = new_path 
+            if init_path != best_path:
+                init_path = best_path
+            else:
+                loop = False
+        return best_path
     
     def swap_2opt(self, path, i, k):
+        copy_path = path[i:k]
+        copy_path.reverse()
         new_path = []
+
         new_path.extend(path[0:i-1])
-        new_path.extend(path[i:k].reverse())
+        new_path.extend(copy_path)
         new_path.extend(path[k + 1:])
         return new_path

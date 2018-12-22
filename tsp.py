@@ -1,4 +1,5 @@
 from sys import argv, stderr
+from timeit import default_timer
 
 from graph import BruteForce, Greedy, TwoOpt
 from node import Node
@@ -20,6 +21,7 @@ def parse_map():
 
 
 def main():
+
     cities, option = parse_map()
     nodes = [Node(city) for city in cities]
     if option == 'brute':
@@ -33,7 +35,14 @@ def main():
         graph = TwoOpt()
 
     graph.set_nodes(nodes)
-    graph.print_result()
+    final_path = graph.find_shortest_path()
+    graph.print_result(final_path)
+
 
 if __name__ == "__main__":
+    start_time = default_timer()
+
     main()
+
+    end_time = default_timer()
+    print('Process time: %s' % (end_time - start_time))
