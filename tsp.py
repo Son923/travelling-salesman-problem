@@ -20,21 +20,26 @@ def parse_map():
         exit()
 
 
-def main():
-
-    cities, option = parse_map()
-    nodes = [Node(city) for city in cities]
+def create_obj_graph(option):
     if option == 'brute':
         print('BRUTE-FORCE')
         graph = BruteForce()
-    elif option == 'greedy':    
+    elif option == 'greedy':
         print('GREEDY')
         graph = Greedy()
     elif option == '2opt':
         print('2-Opt')
         graph = TwoOpt()
+    return graph
 
+
+def main():
+    cities, option = parse_map()
+    nodes = [Node(city) for city in cities]
+
+    graph = create_obj_graph(option)
     graph.set_nodes(nodes)
+    # graph.get_matrix()
     final_path = graph.find_shortest_path()
     graph.print_result(final_path)
 
