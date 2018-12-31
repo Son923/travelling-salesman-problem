@@ -147,8 +147,8 @@ class BnB(Graph):
 
 class Genetic(Graph):
     def __init__(self, side, verbose=False):
-        """ Constructor """
         super().__init__()
+
         self._parent = self.get_nodes()
         self._side = side
 
@@ -162,14 +162,7 @@ class Genetic(Graph):
         self._cached_fitness = {}
 
     def find_shortest_path(self):
-        """
-        Initialize population of lists and sets fittest.
-
-        Yields a new population and mutate a small amount of the individuals to avoid getting stuck.
-
-        Thorough elitism the most fitest individual is carried through the rounds.
-        """
-
+    
         population = self.generate_population()
         fitest = min(population, key=self.fitness)
 
@@ -205,12 +198,12 @@ class Genetic(Graph):
             for ind in sorted(population, key=self.fitness):
                 print("Path: {}, Fitness: {:.3f}".format(ind, self.fitness(ind)))
 
-            print("Cached-> Fitness:{}, Distances: {}".format(len(self._cached_fitness), len(self._cached_distances)))
+            print("Cached-> Fitness:{}, Distances: {}".format(len(self._cached_fitness), 
+                    len(self._cached_distances)))
         print("Execution Time: {:.3f}s".format(time() - total_time))
         print("Best path found: {}, fitness: {:.3f}".format(fitest, self.fitness(fitest)))
 
     def selection(self, new_pop):
-        """ Determines which individuals that survives. Shuffle to destroy symmetry selection over rounds. """
 
         shuffle(new_pop)
         pop = []
@@ -221,7 +214,6 @@ class Genetic(Graph):
         return pop
 
     def select(self, pop):
-        """ Selects a individual that might have a low fitness. """
 
         pop_total_fit = sum(1.0 / self.fitness(p) for p in pop)
         limit = uniform(0.0, pop_total_fit)
@@ -232,12 +224,6 @@ class Genetic(Graph):
                 return p
 
     def fitness(self, child):
-        """
-        Returns the fitness of a individual if it has been calculated.
-        Else it calculates the distance between each node and sum it up, cache it,
-        this is the fitness of current individual. In this case a low
-        fitness is a good fitness.
-        """
 
         h = hash(tuple(child))
         if h in self._cached_fitness.keys():
@@ -251,10 +237,7 @@ class Genetic(Graph):
 
     @staticmethod
     def crossover(father, mother):
-        """
-        Cross two individual thorough a gen by gen approach.
-        For readability and optimization this function is kept ugly.
-        """
+        
         child = [None]*len(father)
         rate = 0.5
         for gen in father:
@@ -283,14 +266,12 @@ class Genetic(Graph):
 
     @staticmethod
     def mutate(child):
-        """ Swaps place of two gens. """
 
         i1, i2 = sample(range(1, len(child)-1), 2)
         child[i1], child[i2] = child[i2], child[i1]
         return child
 
     def point_distance(self, p1, p2):
-        """ Calculates the distance between two points and cache it. """
 
         nodes = hash((p1, p2))
         if nodes in self._cached_distances.keys():
@@ -300,7 +281,6 @@ class Genetic(Graph):
         return d
 
     def generate_population(self):
-        """ Creates the initial populations. """
 
         pop = [self._parent[:1]+sample(
             self._parent[1:-1], len(self._parent)-2)+self._parent[-1:]
