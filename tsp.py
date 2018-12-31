@@ -1,7 +1,7 @@
 from sys import argv, stderr
 from timeit import default_timer
 
-from graph import BruteForce, Greedy, TwoOpt
+from graph import BruteForce, Greedy, TwoOpt, Genetic
 from node import Node
 
 
@@ -20,7 +20,7 @@ def parse_map():
         exit()
 
 
-def create_obj_graph(option):
+def create_obj_graph(option, size):
     if option == 'brute':
         print('BRUTE-FORCE')
         graph = BruteForce()
@@ -30,14 +30,17 @@ def create_obj_graph(option):
     elif option == '2opt':
         print('2-Opt')
         graph = TwoOpt()
+    elif option == 'genetic':
+        print('Genetic')
+        graph = Genetic(size)
     return graph
-
 
 def main():
     cities, option = parse_map()
     nodes = [Node(city) for city in cities]
+    size = len(nodes)
 
-    graph = create_obj_graph(option)
+    graph = create_obj_graph(option, size)
     graph.set_nodes(nodes)
     # graph.get_matrix()
     final_path = graph.find_shortest_path()
